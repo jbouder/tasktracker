@@ -160,7 +160,10 @@ function Home() {
                       </FieldDescription>
                     </Field>
                     <DialogFooter>
-                      <Button type="submit" disabled={!draft.trim()}>
+                      <Button
+                        render={<button type="submit" />}
+                        disabled={!draft.trim()}
+                      >
                         <Plus />
                         Add task
                       </Button>
