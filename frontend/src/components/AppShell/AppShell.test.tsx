@@ -1,17 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createStore, Provider as JotaiProvider } from 'jotai';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { sidebarOpenAtom } from '@/store/appAtoms';
 import AppShell from './AppShell';
 
 function renderShell(initialEntry = '/') {
+  const store = createStore();
+  store.set(sidebarOpenAtom, true);
+
   return render(
     <ThemeProvider>
-      <MemoryRouter initialEntries={[initialEntry]}>
-        <AppShell>
-          <div>Page content</div>
-        </AppShell>
-      </MemoryRouter>
+      <JotaiProvider store={store}>
+        <MemoryRouter initialEntries={[initialEntry]}>
+          <AppShell>
+            <div>Page content</div>
+          </AppShell>
+        </MemoryRouter>
+      </JotaiProvider>
     </ThemeProvider>,
   );
 }
