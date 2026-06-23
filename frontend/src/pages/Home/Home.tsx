@@ -11,6 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -43,6 +52,7 @@ const initialTasks: Task[] = [
 function Home() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [draft, setDraft] = useState('');
+  const [createOpen, setCreateOpen] = useState(false);
   const [showCompleted, setShowCompleted] = useState(true);
   const nextId = useRef(initialTasks.length + 1);
   const newTaskId = useId();
@@ -57,6 +67,7 @@ function Home() {
       ...prev,
     ]);
     setDraft('');
+    setCreateOpen(false);
   };
 
   const toggleTask = (id: number) =>
@@ -104,55 +115,69 @@ function Home() {
 
       <Card className="motion-safe:animate-fade-in">
         <CardHeader>
-          <CardTitle>Quick add</CardTitle>
-          <CardDescription>
-            Capture something before you forget.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={addTask} className="flex items-end gap-3">
-            <Field className="flex-1">
-              <FieldLabel htmlFor={newTaskId}>New task</FieldLabel>
-              <Input
-                id={newTaskId}
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                placeholder="e.g. Review the pull request"
-              />
-              <FieldDescription>Press Add or hit Enter.</FieldDescription>
-            </Field>
-            <Button type="submit" disabled={!draft.trim()}>
-              <Plus />
-              Add task
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="motion-safe:animate-fade-in">
-        <CardHeader>
           <CardTitle>Your tasks</CardTitle>
           <CardDescription>
             {active} active · {completed} completed
           </CardDescription>
           <CardAction>
-            <label
-              htmlFor={showCompletedId}
-              className="flex items-center gap-2 text-sm text-muted-foreground"
-            >
-              Show completed
-              <Switch
-                id={showCompletedId}
-                checked={showCompleted}
-                onCheckedChange={setShowCompleted}
-              />
-            </label>
+            <div className="flex items-center gap-3">
+              <label
+                htmlFor={showCompletedId}
+                className="flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                Show completed
+                <Switch
+                  id={showCompletedId}
+                  checked={showCompleted}
+                  onCheckedChange={setShowCompleted}
+                />
+              </label>
+              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                <DialogTrigger asChild>
+                  <Button type="button">
+                    <Plus />
+                    New task
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create task</DialogTitle>
+                    <DialogDescription>
+                      Capture something before you forget.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={addTask} className="grid gap-4">
+                    <Field>
+                      <FieldLabel htmlFor={newTaskId}>New task</FieldLabel>
+                      <Input
+                        id={newTaskId}
+                        value={draft}
+                        onChange={(event) => setDraft(event.target.value)}
+                        placeholder="e.g. Review the pull request"
+                      />
+                      <FieldDescription>
+                        Press Add or hit Enter.
+                      </FieldDescription>
+                    </Field>
+                    <DialogFooter>
+                      <Button
+                        render={<button type="submit" />}
+                        disabled={!draft.trim()}
+                      >
+                        <Plus />
+                        Add task
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           {visibleTasks.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
-              Nothing here yet. Add your first task above.
+              Nothing here yet. Add your first task from the New task button.
             </p>
           ) : (
             visibleTasks.map((task, index) => (
