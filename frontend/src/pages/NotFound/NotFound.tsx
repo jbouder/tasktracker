@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 function NotFound() {
   return (
-    <div className="container mx-auto px-4 py-16 text-center">
-      <h1 className="text-4xl font-bold tracking-tight">404</h1>
-      <p className="mt-4 text-muted-foreground">Page not found.</p>
-      <Link
-        to="/"
-        className="mt-8 inline-block text-primary underline-offset-4 hover:underline"
-      >
-        Go home
-      </Link>
+    <div className="flex w-full flex-1 items-center justify-center">
+      <Card className="w-full max-w-xl text-center">
+        <CardContent className="py-10">
+          <h1 className="text-4xl font-bold tracking-tight">404</h1>
+          <p className="mt-4 text-muted-foreground">Page not found.</p>
+          <Button className="mt-8" render={<Link to="/" />}>
+            Go home
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

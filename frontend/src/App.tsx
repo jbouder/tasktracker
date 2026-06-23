@@ -1,7 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AppShell from '@/components/AppShell';
 import Home from '@/pages/Home';
 import NotFound from '@/pages/NotFound';
+import Projects from '@/pages/Projects';
+import Reports from '@/pages/Reports';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const queryClient = new QueryClient();
@@ -11,12 +14,14 @@ function App() {
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <div className="min-h-screen bg-background text-foreground">
+          <AppShell>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/reports" element={<Reports />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
+          </AppShell>
         </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
