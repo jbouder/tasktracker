@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createStore, Provider as JotaiProvider } from 'jotai';
 import { MemoryRouter } from 'react-router-dom';
@@ -31,17 +31,14 @@ describe('AppShell', () => {
   it('renders sidebar navigation and page content', () => {
     renderShell();
 
+    const mainNav = screen.getByRole('navigation', { name: 'Main' });
+    expect(mainNav).toBeInTheDocument();
     expect(
-      screen.getByRole('navigation', { name: 'Main' }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute(
-      'href',
-      '/',
-    );
-    expect(screen.getByRole('link', { name: /projects/i })).toHaveAttribute(
-      'href',
-      '/projects',
-    );
+      within(mainNav).getByRole('link', { name: /dashboard/i }),
+    ).toHaveAttribute('href', '/');
+    expect(
+      within(mainNav).getByRole('link', { name: /projects/i }),
+    ).toHaveAttribute('href', '/projects');
     expect(screen.getByText('Page content')).toBeInTheDocument();
   });
 
