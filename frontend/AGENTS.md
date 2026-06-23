@@ -10,7 +10,7 @@ This file provides guidance for AI agents (Claude Code, Copilot, Cursor, etc.) w
 |------|-------|
 | **Project** | tasktracker-frontend |
 | **Framework** | React 19 + TypeScript + Vite |
-| **Styling** | Tailwind CSS 4 (CSS-first) + shadcn/ui — nebari-landing look & feel (Inter Variable font, `#9b3dcc` purple primary) |
+| **Styling** | Tailwind CSS 4 (CSS-first) + [Nebari design system](https://github.com/nebari-dev/nebari-design) — the `@nebari` shadcn registry, built on Base UI (Geist + IBM Plex Mono fonts, Nebari magenta primary) |
 | **Routing** | React Router v6 |
 | **Data fetching** | TanStack Query v5 |
 | **Global state** | Jotai v2 |
@@ -119,13 +119,25 @@ Always use semantic color tokens so dark mode works automatically:
 <div className="bg-white text-gray-900">
 ```
 
-### shadcn/ui
+### Nebari design system
 
-Add components via CLI — **never hand-edit files in `src/components/ui/`**:
+UI components come from the **Nebari design system** — the `@nebari` shadcn
+registry (registered in `components.json`). Components are built on **Base UI**
+(not Radix) and use Base UI's `render` prop for polymorphism (Nebari's
+equivalent of Radix's `asChild`, e.g. `<Button render={<a href="…" />}>`).
+
+Add components via CLI — **never hand-edit files in `src/components/ui/`** (they
+are upstream-managed and overwritten on upgrade; customize at the call site):
 
 ```bash
-npx shadcn@latest add button card input
+npx shadcn@latest add @nebari/button @nebari/badge @nebari/alert
 ```
+
+Catalog: `button`, `badge`, `alert`, `field`, `switch`, `spinner` (+ `theme`).
+For a component not yet in the catalog, fall back to the upstream shadcn
+component and style it with the same semantic tokens. See the `nebari-ui` skill
+in `.claude/skills/` for the full catalog, composition convention, theming, and
+motion guidance.
 
 ---
 
@@ -231,7 +243,7 @@ function ThemeToggle() {
 
 Project-level Claude Code skills live in `.claude/skills/`. This project includes:
 
-- **shadcn-ui** — activates automatically when `components.json` is present; provides component docs, usage examples, and shadcn-aware guidance.
+- **nebari-ui** — guidance for adding and using Nebari design system components (the `@nebari` registry): registry setup, the component catalog, the Base UI `render`-prop composition convention, theming (semantic tokens + light/dark), and motion.
 
 ---
 
@@ -239,9 +251,9 @@ Project-level Claude Code skills live in `.claude/skills/`. This project include
 
 | Don't | Do instead |
 |-------|-----------|
-| Hand-edit `src/components/ui/` files | Use `npx shadcn@latest add <component>` |
-| Build a custom component when a shadcn one exists | Check `src/components/ui/` first; if not yet added, run `npx shadcn@latest add <component>` |
-| Add one-off utility classes to pages/screens | Update the shadcn component to accept the variant/prop instead |
+| Hand-edit `src/components/ui/` files | Customize at the call site (`className`, `render` prop, or a wrapper); request catalog changes upstream in nebari-design |
+| Build a custom component when a Nebari one exists | Check `src/components/ui/` first; if not yet added, run `npx shadcn@latest add @nebari/<component>` |
+| Add one-off utility classes to pages/screens | Pass extra classes via `className` (merged with `cn()`) or build a thin wrapper component |
 | Use TypeScript `any` | Use proper types or `unknown` with narrowing |
 | Use raw Tailwind colors (`bg-white`, `text-gray-900`) | Use semantic tokens (`bg-background`, `text-foreground`) |
 | Fetch directly in components | Create a hook in `src/hooks/` using TanStack Query |
