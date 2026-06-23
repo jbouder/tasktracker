@@ -76,7 +76,7 @@ function Home() {
     : tasks.filter((task) => !task.done);
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-16">
+    <div className="flex w-full flex-col gap-6">
       <header className="motion-safe:animate-slide-up-fade flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -93,7 +93,7 @@ function Home() {
         </p>
       </header>
 
-      <Alert variant="info" className="motion-safe:animate-fade-in mt-8">
+      <Alert variant="info" className="motion-safe:animate-fade-in">
         <Sparkles className="size-4" />
         <AlertTitle>Try it out</AlertTitle>
         <AlertDescription>
@@ -102,7 +102,7 @@ function Home() {
         </AlertDescription>
       </Alert>
 
-      <Card className="motion-safe:animate-fade-in mt-6">
+      <Card className="motion-safe:animate-fade-in">
         <CardHeader>
           <CardTitle>Quick add</CardTitle>
           <CardDescription>
@@ -129,7 +129,7 @@ function Home() {
         </CardContent>
       </Card>
 
-      <Card className="motion-safe:animate-fade-in mt-6">
+      <Card className="motion-safe:animate-fade-in">
         <CardHeader>
           <CardTitle>Your tasks</CardTitle>
           <CardDescription>
